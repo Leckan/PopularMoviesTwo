@@ -74,6 +74,14 @@ tools:context="com.leckan.popularmoviestwo.UI.MoviesDetail">
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:textSize="18sp" />
+    <android.support.v7.widget.RecyclerView
+    android:id="@+id/reviews_recycler_view"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:padding="1dp"
+    />
 </LinearLayout>
+
+
 </ScrollView>
 

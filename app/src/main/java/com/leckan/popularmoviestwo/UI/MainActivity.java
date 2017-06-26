@@ -1,36 +1,30 @@
 package com.leckan.popularmoviestwo.UI;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
+import com.facebook.stetho.Stetho;
+import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.leckan.popularmoviestwo.Adapter.MovieAdapter;
 import com.leckan.popularmoviestwo.Model.DummyMovies;
 import com.leckan.popularmoviestwo.Model.Movie;
 import com.leckan.popularmoviestwo.R;
-import com.leckan.popularmoviestwo.Utilities.NetworkUtils;
+import com.leckan.popularmoviestwo.Utilities.DownloadMoviesTask;
 import com.leckan.popularmoviestwo.Utilities.Utility;
+import com.squareup.okhttp.OkHttpClient;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.ListItemClickListener {
 
@@ -38,14 +32,21 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
     RecyclerView moviesList;
     MovieAdapter adapter;
     private String sPreferredType;
-    private ProgressDialog pDialog;
-
-    ArrayList<Movie> dMovies ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Stetho.initialize(
+                Stetho.newInitializerBuilder(this)
+                        .enableDumpapp(
+                                Stetho.defaultDumperPluginsProvider(this))
+                        .enableWebKitInspector(
+                                Stetho.defaultInspectorModulesProvider(this))
+                        .build());
+        OkHttpClient client = new OkHttpClient();
+        client.networkInterceptors().add(new StethoInterceptor());
 
 
         moviesList = (RecyclerView) findViewById(R.id.recycler_view);
@@ -81,92 +82,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
     }
 
     public void LoadMoviesPage(String prefType) {
-        new DownloadMoviesTask().execute();
+        new DownloadMoviesTask(MainActivity.this, prefType, moviesList).execute();
     }
-
-    private class DownloadMoviesTask extends AsyncTask<Object, Object, Void> {
-
-
-        @Override
-        protected Void doInBackground(Object... voids) {
-
-            URL movieURL = NetworkUtils.buildUrl(sPreferredType);
-            String jsonStr = NetworkUtils.makeServiceCall(movieURL.toString());
-            if (jsonStr != null) {
-                try {
-                    JSONObject jsonObj = new JSONObject(jsonStr);
-
-                    // Getting JSON Array node
-                    JSONArray myUsers = jsonObj.getJSONArray("results");
-                    dMovies = new ArrayList<Movie>();
-                    // looping through All Contacts
-                    for (int i = 0; i < myUsers.length(); i++) {
-                        JSONObject c = myUsers.getJSONObject(i);
-                        Movie aMovie = new Movie();
-                        aMovie.setOriginal_title(c.getString("original_title"));
-                        aMovie.setPoster_path(c.getString("poster_path"));
-                        aMovie.setOverview(c.getString("overview"));
-                        aMovie.setRelease_date(c.getString("release_date"));
-                        aMovie.setVote_average(Float.valueOf(c.getString("vote_average")));
-                        // adding contact to contact list
-                        dMovies.add(aMovie);
-                    }
-                } catch (final JSONException e) {
-                    Log.e("Main", "Json parsing error: " + e.getMessage());
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(),
-                                    "Json parsing error: " + e.getMessage(),
-                                    Toast.LENGTH_LONG)
-                                    .show();
-                        }
-                    });
-
-                }
-            } else {
-                Log.e("Main", "Couldn't get json from server.");
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(),
-                                "Couldn't get json from server. Check LogCat for possible errors!",
-                                Toast.LENGTH_LONG)
-                                .show();
-                    }
-                });
-
-            }
-
-            return null;
-        }
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            // Showing progress dialog
-            pDialog = new ProgressDialog(MainActivity.this);
-            pDialog.setMessage("Please wait...");
-            pDialog.setCancelable(false);
-            pDialog.show();
-
-        }
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            // Dismiss the progress dialog
-            if (pDialog.isShowing())
-                pDialog.dismiss();
-            /**
-             * Updating parsed JSON data into ListView
-             * */
-
-            adapter = new MovieAdapter(dMovies, MainActivity.this);
-
-            moviesList.setAdapter(adapter);
-
-        }
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

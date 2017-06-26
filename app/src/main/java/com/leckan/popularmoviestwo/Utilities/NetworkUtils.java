@@ -32,6 +32,9 @@ public class NetworkUtils {
     private static final String TOP_RATED = "top_rated";
     private static final String format = "json";
     private static final String size = "w500";
+    private static final String REVIEWS = "reviews";
+    private static final String VIDEOS = "videos";
+
 
 
     final static String QUERY_PARAM = "q";
@@ -52,6 +55,39 @@ public class NetworkUtils {
 
         return url;
     }
+
+    public static URL buildReviewsUrl(int movieID) {
+        Uri builtUri = Uri.parse(BASE_MOVIE_URL).buildUpon()
+                .appendPath(String.valueOf(movieID))
+                .appendPath(REVIEWS)
+                .appendQueryParameter(API_KEY_PARAM, myKey).build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+    public static URL buildVideosUrl(int movieID) {
+        Uri builtUri = Uri.parse(BASE_MOVIE_URL).buildUpon()
+                .appendPath(String.valueOf(movieID))
+                .appendPath(VIDEOS)
+                .appendQueryParameter(API_KEY_PARAM, myKey).build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
+
     public static String makeServiceCall(String reqUrl) {
         String response = null;
         try {
@@ -72,6 +108,7 @@ public class NetworkUtils {
         }
         return response;
     }
+
     private static String convertStreamToString(InputStream is) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
@@ -92,6 +129,8 @@ public class NetworkUtils {
         }
         return sb.toString();
     }
+
+
     public static URL buildImageUrl(String imagePath) {
         Uri builtUri = Uri.parse(BASE_MOVIE_IMAGE_URL).buildUpon()
                 .appendPath(size)
@@ -106,6 +145,7 @@ public class NetworkUtils {
 
         return url;
     }
+
 
     public static String getResponseFromHttpUrl(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
