@@ -3,9 +3,11 @@
     <string-array name="sorttypes">
         <item>By Popularity</item>
         <item>By Top Rated</item>
+        <item>Show Favorites</item>
     </string-array>
     <string-array name="sortnames">
         <item>popular</item>
         <item>top_rated</item>
+        <item>favorites</item>
     </string-array>
 </resources>

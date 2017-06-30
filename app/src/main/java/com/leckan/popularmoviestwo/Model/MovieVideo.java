@@ -1,12 +1,15 @@
 package com.leckan.popularmoviestwo.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
 /**
- * Created by Simpa on 6/26/2017.
+ * Created by Leckan on 6/26/2017.
  */
 
-public class MovieVideo implements Serializable {
+public class MovieVideo implements Parcelable {
     private String id ;
     private String iso_639_1 ;
     private String iso_3166_1 ;
@@ -79,4 +82,48 @@ public class MovieVideo implements Serializable {
     public void setType(String type) {
         this.type = type;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
+        parcel.writeString(iso_3166_1);
+        parcel.writeString(iso_639_1);
+        parcel.writeString(key);
+        parcel.writeString(name);
+        parcel.writeString(site);
+        parcel.writeInt(size);
+        parcel.writeString(type);
+    }
+
+    public MovieVideo()
+    {
+
+    }
+    public MovieVideo(Parcel parcel) {
+        this.id = parcel.readString();
+        this.iso_3166_1= parcel.readString();
+        this.iso_639_1 = parcel.readString();
+        this.key = parcel.readString();
+        this.name = parcel.readString();
+        this.site = parcel.readString();
+        this.size = parcel.readInt();
+        this.type = parcel.readString();
+    }
+
+    public static final Parcelable.Creator<MovieVideo> CREATOR = new Parcelable.Creator<MovieVideo>() {
+        @Override
+        public MovieVideo createFromParcel(Parcel parcel) {
+            return new MovieVideo(parcel);
+        }
+
+        @Override
+        public MovieVideo[] newArray(int size) {
+            return new MovieVideo[size];
+        }
+    };
 }

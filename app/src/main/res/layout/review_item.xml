@@ -3,26 +3,32 @@
     android:id="@+id/review_item_root"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:background="@drawable/item_selector">
+
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:id="@+id/review_author"
-        android:padding="4dp"
-        android:textSize="16sp"
-        android:textColor="@android:color/white"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:background="@color/colorPrimaryDark" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="32dp"
+        android:layout_height="wrap_content"
         android:id="@+id/review_content"
-        android:padding="4dp"
+        android:fontFamily="monospace"
+        android:paddingTop="16dp"
+        android:paddingBottom="2dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         android:textSize="16sp"
-        android:textColor="@android:color/white"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:background="@color/colorPrimaryDark" />
+        android:text="@string/content" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/review_author"
+        android:fontFamily="monospace"
+        android:paddingTop="2dp"
+        android:paddingBottom="16dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:textSize="16sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:gravity="right"
+        android:text="@string/author"/>
 
 </LinearLayout>

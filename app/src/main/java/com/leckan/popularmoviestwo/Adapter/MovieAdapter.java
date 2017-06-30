@@ -18,6 +18,9 @@ import com.squareup.picasso.Picasso;
 import java.net.URL;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by Leckan on 5/14/2017.
  */
@@ -28,7 +31,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     private static final String TAG = MovieAdapter.class.getSimpleName();
     // final private ListItemClickListener mOnClickListener;
     private static int viewHolderCount;
-    List<Movie> movieList;
+   public List<Movie> movieList;
     LayoutInflater inflater;
 
     // private int mNumberItems;
@@ -51,7 +54,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         Movie movie = movieList.get(position);
         holder.viewMovieName.setText(movie.getOriginal_title());
         URL url = NetworkUtils.buildImageUrl(movie.getPoster_path());
-        Picasso.with(this.inflater.getContext()).load(url.toString()).into( holder.listMovieImageView);
+        Picasso.with(this.inflater.getContext()).load(url.toString()).placeholder(R.drawable.ic_photo)
+                .error(R.drawable.ic_photo)
+                .into( holder.listMovieImageView);
 
     }
 
@@ -59,49 +64,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     public int getItemCount() {
         return movieList.size();
     }
-
-
-/*
-    public MovieAdapter( List<Movie> theMovieLists, ListItemClickListener listener)
-    {
-
-        mNumberItems = theMovieLists.size();
-        mOnClickListener = listener;
-        viewHolderCount = 0;
-        this.movieList = theMovieLists;
-    }
-
-    @Override
-    public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        int layoutIdForListItem = R.layout.movie_item;
-        LayoutInflater inflater = LayoutInflater.from(context);
-
-
-        boolean shouldAttachToParentImmediately = false;
-
-        View view = inflater.inflate(layoutIdForListItem, parent, shouldAttachToParentImmediately);
-
-        MovieViewHolder viewHolder = new MovieViewHolder(view);
-
-
-
-        viewHolderCount++;
-        return viewHolder;
-    }
-
-    @Override
-    public void onBindViewHolder(MovieViewHolder holder, int position) {
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return movieList.size();
-    }
-
-*/
-
 
     public interface ListItemClickListener {
         void onListItemClick(int clickedItemIndex);
@@ -110,21 +72,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        // Will display the position in the list, ie 0 through getItemCount() - 1
-        ImageView listMovieImageView;
-        // Will display which ViewHolder is displaying this data
-        TextView viewMovieName;
-        View container;
+       @BindView(R.id.movie_image) ImageView listMovieImageView;
+       @BindView(R.id.movie_name) TextView viewMovieName;
+       @BindView(R.id.movie_item_root) View container;
 
 
         public MovieViewHolder(View itemView) {
             super(itemView);
-
-
-            listMovieImageView = (ImageView) itemView.findViewById(R.id.movie_image);
-            viewMovieName = (TextView) itemView.findViewById(R.id.movie_name);
-            container = itemView.findViewById(R.id.movie_item_root);
-
+            ButterKnife.bind(this,itemView);
             itemView.setOnClickListener(this);
         }
 
@@ -132,13 +87,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         public void onClick(View view) {
 
             int clickedPosition = getAdapterPosition();
-            Movie selectedMovie = (Movie) movieList.get(clickedPosition);
-
+            Movie selectedMovie = movieList.get(clickedPosition);
             Intent intent = new Intent(inflater.getContext(), MoviesDetail.class);
-
             intent.putExtra("theMovie",selectedMovie);
             inflater.getContext().startActivity(intent);
-            // mOnClickListener.onListItemClick(clickedPosition);
         }
     }
 }

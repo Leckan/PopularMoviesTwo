@@ -8,62 +8,61 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.leckan.popularmoviestwo.Adapter.MovieAdapter;
-import com.leckan.popularmoviestwo.Model.Movie;
+import com.leckan.popularmoviestwo.Adapter.VideoAdapter;
+import com.leckan.popularmoviestwo.Model.MovieVideo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URL;
 import java.util.ArrayList;
 
 /**
- * Created by Leckan on 6/26/2017.
+ * Created by Leckan on 6/27/2017.
  */
 
-public class DownloadMoviesTask extends AsyncTask<Object, Object, Void> {
+public class DownloadVideosTask  extends AsyncTask<Object, Object, Void> {
 
     private Context mContext;
-    String sPreferredType;
-    ArrayList<Movie> dMovies;
+    RecyclerView videoRecyclerView;
+    String videosURL;
+    ArrayList<MovieVideo> videoArrayList;
     ProgressDialog pDialog;
-    RecyclerView moviesList;
-    MovieAdapter adapter;
+    VideoAdapter videoAdapter;
 
-    public DownloadMoviesTask(Context context, String preferredType, RecyclerView moviesRecyclerView) {
+    public DownloadVideosTask(Context context, RecyclerView rv, String url) {
         mContext = context;
-        moviesList = moviesRecyclerView;
-        sPreferredType = preferredType;
+        videoRecyclerView = rv;
+        videosURL = url;
     }
 
-    //private MainActivity theActivity;
     @Override
     protected Void doInBackground(Object... voids) {
 
-        URL movieURL = NetworkUtils.buildUrl(sPreferredType);
-        String jsonStr = NetworkUtils.makeServiceCall(movieURL.toString());
+        String jsonStr = NetworkUtils.makeServiceCall(videosURL);
         if (jsonStr != null) {
             try {
                 JSONObject jsonObj = new JSONObject(jsonStr);
 
                 // Getting JSON Array node
-                JSONArray myUsers = jsonObj.getJSONArray("results");
-                dMovies = new ArrayList<Movie>();
-                for (int i = 0; i < myUsers.length(); i++) {
-                    JSONObject c = myUsers.getJSONObject(i);
-                    Movie aMovie = new Movie();
-                    aMovie.setId(c.getInt("id"));
-                    aMovie.setTitle(c.getString("title"));
-                    aMovie.setBackdrop_path(c.getString("backdrop_path"));
-                    aMovie.setPopularity(c.getInt("popularity"));
-                    aMovie.setVote_count(c.getInt("vote_count"));
-                    aMovie.setOriginal_title(c.getString("original_title"));
-                    aMovie.setPoster_path(c.getString("poster_path"));
-                    aMovie.setOverview(c.getString("overview"));
-                    aMovie.setRelease_date(c.getString("release_date"));
-                    aMovie.setVote_average(Float.valueOf(c.getString("vote_average")));
-                    dMovies.add(aMovie);
+                JSONArray theVideos = jsonObj.getJSONArray("results");
+                videoArrayList = new ArrayList<MovieVideo>();
+                // looping through All Contacts
+                for (int i = 0; i < theVideos.length(); i++) {
+                    JSONObject c = theVideos.getJSONObject(i);
+                    MovieVideo aVideo = new MovieVideo();
+                    aVideo.setId(c.getString("id"));
+                    aVideo.setIso_639_1(c.getString("iso_639_1"));
+                    aVideo.setIso_3166_1(c.getString("iso_3166_1"));
+                    aVideo.setKey(c.getString("key"));
+                    aVideo.setName(c.getString("name"));
+                    aVideo.setSite(c.getString("site"));
+                    aVideo.setSize(c.getInt("size"));
+                    aVideo.setType(c.getString("type"));
+                    if(aVideo.getSite().equalsIgnoreCase("youtube"))
+                    {
+                        videoArrayList.add(aVideo);
+                    }
                 }
             } catch (final JSONException e) {
                 Log.e("Main", "Json parsing error: " + e.getMessage());
@@ -112,13 +111,10 @@ public class DownloadMoviesTask extends AsyncTask<Object, Object, Void> {
         // Dismiss the progress dialog
         if (pDialog.isShowing())
             pDialog.dismiss();
-        /**
-         * Updating parsed JSON data into ListView
-         * */
 
-        adapter = new MovieAdapter(dMovies, mContext);
+        videoAdapter = new VideoAdapter(videoArrayList, mContext);
 
-        moviesList.setAdapter(adapter);
+        videoRecyclerView.setAdapter(videoAdapter);
 
     }
 }

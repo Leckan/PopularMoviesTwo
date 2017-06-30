@@ -12,6 +12,9 @@ import com.leckan.popularmoviestwo.R;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by Leckan on 6/26/2017.
  */
@@ -19,13 +22,14 @@ import java.util.List;
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
 
     private static final String TAG = MovieAdapter.class.getSimpleName();
-    List<MovieReview> reviewList;
+    public List<MovieReview> reviewList;
     LayoutInflater inflater;
 
 
     public ReviewAdapter(List<MovieReview> reviews, Context c) {
         this.inflater = LayoutInflater.from(c);
         this.reviewList = reviews;
+
     }
 
     @Override
@@ -48,15 +52,14 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
     }
 
     public class ReviewViewHolder extends RecyclerView.ViewHolder {
-        TextView authorTextView;
-        TextView contentTextView;
-        View container;
+      @BindView(R.id.review_author)  TextView authorTextView;
+      @BindView(R.id.review_content)  TextView contentTextView;
+      @BindView(R.id.review_item_root)  View container;
 
         public ReviewViewHolder(View itemView) {
             super(itemView);
-            authorTextView = (TextView) itemView.findViewById(R.id.review_author);
-            contentTextView = (TextView) itemView.findViewById(R.id.review_content);
-            container = itemView.findViewById(R.id.review_item_root);
+
+            ButterKnife.bind(this,itemView);
         }
     }
 }

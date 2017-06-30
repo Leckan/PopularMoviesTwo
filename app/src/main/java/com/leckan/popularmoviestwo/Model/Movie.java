@@ -1,27 +1,37 @@
 package com.leckan.popularmoviestwo.Model;
 
+import android.content.ContentValues;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.leckan.popularmoviestwo.Data.MoviesContract;
+
 import java.io.Serializable;
 
 /**
  * Created by Leckan on 5/14/2017.
  */
 
-public class Movie implements Serializable
+public class Movie implements Parcelable
 {
-    private String poster_path ;
-    private boolean adult ;
-    private String overview ;
-    private String release_date;
-    private int[] genre_ids ;
+    private int _id ;
     private int id ;
-    private String original_title ;
-    private String original_language ;
-    private String title ;
+    private boolean adult ;
     private String backdrop_path ;
-    private float popularity ;
-    private int vote_count ;
-    private boolean video ;
+    private int[] genre_ids ;
     private int imageRes;
+    private String original_language ;
+    private String original_title ;
+    private String overview ;
+    private float popularity ;
+    private String poster_path ;
+    private String release_date;
+    private String title ;
+    private boolean video ;
+    private int vote_count ;
+    private String local_poster_path;
+    public Movie()
+    {}
 
     public int getImageRes() {
         return imageRes;
@@ -94,7 +104,13 @@ public class Movie implements Serializable
     public void setOriginal_language(String original_language) {
         this.original_language = original_language;
     }
+    public String getLocal_poster_path() {
+        return local_poster_path;
+    }
 
+    public void setLocal_poster_path(String local_poster_path) {
+        this.local_poster_path = local_poster_path;
+    }
     public String getTitle() {
         return title;
     }
@@ -144,4 +160,62 @@ public class Movie implements Serializable
     }
 
     private float vote_average ;
+
+    public ContentValues toContentValues() {
+        ContentValues values = new ContentValues();
+        values.put(MoviesContract.MovieEntry.COLUMN_MOVIE_ID, id);
+        values.put(MoviesContract.MovieEntry.COLUMN_ORIGINAL_TITLE, original_title);
+        values.put(MoviesContract.MovieEntry.COLUMN_OVERVIEW, overview);
+        values.put(MoviesContract.MovieEntry.COLUMN_RELEASE_DATE, release_date);
+        values.put(MoviesContract.MovieEntry.COLUMN_POSTER_PATH, poster_path);
+        values.put(MoviesContract.MovieEntry.COLUMN_POPULARITY, popularity);
+        values.put(MoviesContract.MovieEntry.COLUMN_TITLE, title);
+        values.put(MoviesContract.MovieEntry.COLUMN_VOTE_AVERAGE, vote_average);
+        values.put(MoviesContract.MovieEntry.COLUMN_VOTE_COUNT, vote_count);
+        values.put(MoviesContract.MovieEntry.COLUMN_BACKDROP_PATH, backdrop_path);
+        return values;
+    }
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(backdrop_path);
+        parcel.writeString(overview);
+        parcel.writeFloat(popularity);
+        parcel.writeString(poster_path);
+        parcel.writeString(release_date);
+        parcel.writeString(title);
+        parcel.writeFloat(vote_average);
+        parcel.writeInt(vote_count);
+        parcel.writeString(original_title);
+
+    }
+    public Movie(Parcel parcel) {
+        this.id = parcel.readInt();
+        this.backdrop_path = parcel.readString();
+        this.overview = parcel.readString();
+        this.popularity = parcel.readFloat();
+        this.poster_path = parcel.readString();
+        this.release_date = parcel.readString();
+        this.title = parcel.readString();
+        this.vote_average = parcel.readFloat();
+        this.vote_count = parcel.readInt();
+        this.original_title = parcel.readString();
+    }
+
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel parcel) {
+            return new Movie(parcel);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 }

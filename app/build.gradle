@@ -19,7 +19,7 @@ android {
     }
 
     buildTypes.each {
-        it.buildConfigField 'String', 'TMDB_API_KEY', '"INSERT KEY HERE"'
+        it.buildConfigField 'String', 'TMDB_API_KEY', '"PUT API KEY HERE"'
     }
 }
 
@@ -33,5 +33,7 @@ dependencies {
     compile 'com.facebook.stetho:stetho-okhttp:1.5.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support:recyclerview-v7:25.2.0'
+    compile 'com.jakewharton:butterknife:8.6.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
     testCompile 'junit:junit:4.12'
 }
