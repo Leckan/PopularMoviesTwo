@@ -7,11 +7,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.leckan.popularmoviestwo.Model.MovieVideo;
 import com.leckan.popularmoviestwo.R;
 import com.leckan.popularmoviestwo.Utilities.NetworkUtils;
+import com.squareup.picasso.Picasso;
 
+import java.net.URL;
 import java.util.List;
 
 import butterknife.BindView;
@@ -44,7 +47,12 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     @Override
     public void onBindViewHolder(VideoAdapter.VideoViewHolder holder, int position) {
         MovieVideo video = videoList.get(position);
-        holder.nameTextView.setText(video.getName());
+
+        URL img_url = NetworkUtils.buildYoutubeImageUrl(video.getKey());
+        Picasso.with(this.inflater.getContext())
+                .load(img_url.toString())
+                .placeholder(R.drawable.ic_video)
+                .into(holder.trailerImage);
     }
 
     @Override
@@ -56,8 +64,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     }
 
     public class VideoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        @BindView(R.id.tvVideoTitle) TextView nameTextView;
+      // @BindView(R.id.tvVideoTitle) TextView nameTextView;
         @BindView(R.id.video_item_root)  View container;
+        @BindView(R.id.ivVideo) ImageView trailerImage;
 
         public VideoViewHolder(View itemView) {
             super(itemView);

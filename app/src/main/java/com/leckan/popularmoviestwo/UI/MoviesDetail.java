@@ -58,6 +58,7 @@ public class MoviesDetail extends AppCompatActivity implements VideoAdapter.List
 
     private final String REVIEWS_SAVED_STATE = "reviews";
 
+    private final String CURRENT_SCROLL_POSITION = "currentScrollPosition";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +89,7 @@ public class MoviesDetail extends AppCompatActivity implements VideoAdapter.List
         reviewRecyclerView.setLayoutManager(layoutManager);
 
 
-        LinearLayoutManager videoLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager videoLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
         videoRecyclerView.setLayoutManager(videoLayoutManager);
 
         List<MovieVideo> movieVideos = new ArrayList<>();
@@ -122,7 +123,7 @@ public class MoviesDetail extends AppCompatActivity implements VideoAdapter.List
 
        // outState.putParcelableArray(REVIEWS_SAVED_STATE, (Parcelable[]) reviewAdapter.reviewList.toArray());
       //  outState.putParcelableArray(VIDEOS_SAVED_STATE, (Parcelable[]) videoAdapter.videoList.toArray());
-      //  outState.putBoolean(IS_RESTORED_SAVED_STATE,isRestoredState);
+        outState.putBoolean(IS_RESTORED_SAVED_STATE,isRestoredState);
     }
 
     @Override

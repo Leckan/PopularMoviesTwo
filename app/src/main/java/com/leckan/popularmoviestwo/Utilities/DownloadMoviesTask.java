@@ -30,11 +30,13 @@ public class DownloadMoviesTask extends AsyncTask<Object, Object, Void> {
     ProgressDialog pDialog;
     RecyclerView moviesList;
     MovieAdapter adapter;
+    int currentScrollPosition;
 
-    public DownloadMoviesTask(Context context, String preferredType, RecyclerView moviesRecyclerView) {
+    public DownloadMoviesTask(Context context, String preferredType, RecyclerView moviesRecyclerView, int scrollPosition) {
         mContext = context;
         moviesList = moviesRecyclerView;
         sPreferredType = preferredType;
+        currentScrollPosition = scrollPosition;
     }
 
     //private MainActivity theActivity;
@@ -120,5 +122,7 @@ public class DownloadMoviesTask extends AsyncTask<Object, Object, Void> {
 
         moviesList.setAdapter(adapter);
 
+        if(currentScrollPosition > 0)
+        moviesList.scrollToPosition(currentScrollPosition);
     }
 }

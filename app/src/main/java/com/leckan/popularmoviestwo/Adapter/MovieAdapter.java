@@ -87,6 +87,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         public void onClick(View view) {
 
             int clickedPosition = getAdapterPosition();
+
             Movie selectedMovie = movieList.get(clickedPosition);
             Intent intent = new Intent(inflater.getContext(), MoviesDetail.class);
             intent.putExtra("theMovie",selectedMovie);

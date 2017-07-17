@@ -29,6 +29,8 @@ public class NetworkUtils {
     private static final String BASE_MOVIE_IMAGE_URL = "http://image.tmdb.org/t/p/";
     private static final String BASE_MOVIE_URL = "https://api.themoviedb.org/3/movie/";
     private static final String YOUTUBE_URL = "http://www.youtube.com/watch";
+    private static final String YOUTUBE_IMAGE_URL = "http://img.youtube.com/vi/";
+    private static final String YOUTUBE_IMAGE_URL_END = "0.jpg";
     private static final String POPULAR = "popular";
     private static final String TOP_RATED = "top_rated";
     private static final String format = "json";
@@ -142,6 +144,20 @@ public class NetworkUtils {
         Uri builtUri = Uri.parse(BASE_MOVIE_IMAGE_URL).buildUpon()
                 .appendPath(size)
                 .appendEncodedPath(imagePath).build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+    public static URL buildYoutubeImageUrl(String youtubeID) {
+        Uri builtUri = Uri.parse(YOUTUBE_IMAGE_URL).buildUpon()
+                .appendPath(youtubeID)
+                .appendPath(YOUTUBE_IMAGE_URL_END).build();
 
         URL url = null;
         try {

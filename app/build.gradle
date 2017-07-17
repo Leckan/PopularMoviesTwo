@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "26.0.0"
     defaultConfig {
         applicationId "com.leckan.popularmoviestwo"
         minSdkVersion 15
@@ -12,14 +12,19 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+
+        debug {
+            buildConfigField "Boolean", "DEBUG_MODE", "true"
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "Boolean", "DEBUG_MODE", "false"
         }
     }
 
     buildTypes.each {
-        it.buildConfigField 'String', 'TMDB_API_KEY', '"INSERT API KEY HERE"'
+        it.buildConfigField 'String', 'TMDB_API_KEY', '"INSERT-KEY-HERE"'
     }
 }
 
@@ -28,11 +33,11 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.facebook.stetho:stetho:1.1.1'
     compile 'com.facebook.stetho:stetho-okhttp:1.5.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.android.support:recyclerview-v7:25.2.0'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.jakewharton:butterknife:8.6.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
     testCompile 'junit:junit:4.12'
